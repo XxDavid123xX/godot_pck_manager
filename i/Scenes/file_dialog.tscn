@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://m3fjyek0j6qg"]
+
+[node name="FileDialog" type="FileDialog" unique_id=1396807180]
+oversampling_override = 1.0
+title = "Open a File or Directory"
+position = Vector2i(0, 36)
+visible = true
+file_mode = 3
+access = 2
+use_native_dialog = true
