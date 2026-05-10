@@ -6,14 +6,14 @@ on:
       - 'v*'
 
 env:
-  GODOT_VERSION: 4.7.0
+  GODOT_VERSION: 4.7-beta1
   EXPORT_NAME: Godot PCK Manager
 
 jobs:
   export-game:
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:4.2.1
+      image: barichello/godot-ci:4.7
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates/
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION} ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
       
       - name: Get Tag Message
         id: tag_info
