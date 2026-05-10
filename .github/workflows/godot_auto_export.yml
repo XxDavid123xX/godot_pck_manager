@@ -1,4 +1,4 @@
-name: "Godot Tagged Release Export"
+name: "Godot Release Export"
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - 'v*'
 
 env:
-  GODOT_VERSION: 4.2.1
-  EXPORT_NAME: mi-juego
+  GODOT_VERSION: 4.7.0
+  EXPORT_NAME: Godot PCK Manager
 
 jobs:
   export-game:
@@ -58,7 +58,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Versión ${{ github.ref_name }}"
+          name: "GPM Update : ${{ github.ref_name }}"
           tag_name: ${{ github.ref_name }}
           body: ${{ steps.tag_info.outputs.message }} # Usa el mensaje extraído arriba
           files: |
