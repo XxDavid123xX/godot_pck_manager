@@ -1,0 +1,69 @@
+name: "Godot Tagged Release Export"
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  GODOT_VERSION: 4.2.1
+  EXPORT_NAME: mi-juego
+
+jobs:
+  export-game:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.2.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0 # Importante: descarga todo el historial para poder leer los mensajes de los tags
+
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+
+      - name: Windows Export
+        run: |
+          mkdir -v -p build/windows
+          godot --headless --verbose --export-release "Windows Desktop" build/windows/${{ env.EXPORT_NAME }}.exe
+
+      - name: Linux Export
+        run: |
+          mkdir -v -p build/linux
+          godot --headless --verbose --export-release "Linux/X11" build/linux/${{ env.EXPORT_NAME }}.x86_64
+
+      - name: Web Export
+        run: |
+          mkdir -v -p build/web
+          godot --headless --verbose --export-release "Web" build/web/index.html
+
+      # Paso clave: Extraer el mensaje del tag
+      - name: Get Tag Message
+        id: tag_info
+        run: |
+          # Extrae el contenido del tag anotado y lo guarda en una variable de salida
+          TAG_MSG=$(git tag -l --format='%(contents:body)' ${{ github.ref_name }})
+          # Si el mensaje está vacío (tag no anotado), usa el asunto del tag
+          if [ -z "$TAG_MSG" ]; then
+            TAG_MSG=$(git tag -l --format='%(contents:subject)' ${{ github.ref_name }})
+          fi
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          echo "$TAG_MSG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Versión ${{ github.ref_name }}"
+          tag_name: ${{ github.ref_name }}
+          body: ${{ steps.tag_info.outputs.message }} # Usa el mensaje extraído arriba
+          files: |
+            build/windows/*
+            build/linux/*
+            build/web/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
