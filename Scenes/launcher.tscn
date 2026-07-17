@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://ecmciklkvrcn"]
+
+[ext_resource type="Script" uid="uid://cee58udsgu3q" path="res://Scripts/launcher.gd" id="1_w37im"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g7b7a"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_ndnwk"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_w37im"]
+font = SubResource("SystemFont_ndnwk")
+font_size = 30
+
+[node name="Node" type="PanelContainer" unique_id=785669028]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_g7b7a")
+script = ExtResource("1_w37im")
+
+[node name="Label" type="Label" parent="." unique_id=1937770955]
+layout_mode = 2
+size_flags_vertical = 1
+text = "test"
+label_settings = SubResource("LabelSettings_w37im")
+horizontal_alignment = 1
+vertical_alignment = 1
